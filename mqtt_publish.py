@@ -4,19 +4,17 @@ from paho import mqtt
 import time
 
 #---------- settings ----------
-#client = paho.Client(client_id="IoT Test", userdata=None, protocol=paho.MQTTv5)
-#client.tls_set(tls_version=mqtt.client.ssl.PROTOCOL_TLS)
-#client.username_pw_set("Docterpanzen", "Start.123")
-#client.connect("d8b3f3da52c749dc9ca162ec9439e398.s2.eu.hivemq.cloud", 8883)
+client = paho.Client("MQTT")
+broker_address = "d8b3f3da52c749dc9ca162ec9439e398.s2.eu.hivemq.cloud"
+port = 8883
+user = "Docterpanzen"
+password = "Start.123"
+client.username_pw_set(username=user, password=password)
+client.tls_set(tls_version=mqtt.client.ssl.PROTOCOL_TLS)
+client.connect(broker_address, port=port)
 #------------------------------
 
-client = paho.Client("MQTT")
-broker_address = "158.180.44.197"
-port = 1883
-user = "bobm"
-password = "letmein"
-client.username_pw_set(username=user, password=password)
-client.connect(broker_address, port=port)
+
 
 
 
