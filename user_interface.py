@@ -16,7 +16,7 @@ def close_database_connection(conn):
 
 
 # Funktion zum Daten holen aus der Datenbank
-def get_data(start_datetime, end_datetime):
+def get_data_temperature(start_datetime, end_datetime):
     conn, cur = connect_to_database()
     start_datetime_str = start_datetime.strftime('%Y-%m-%d %H:%M:%S')
     end_datetime_str = end_datetime.strftime('%Y-%m-%d %H:%M:%S')
@@ -27,6 +27,11 @@ def get_data(start_datetime, end_datetime):
     close_database_connection(conn)
     return rows
 
+def get_data_humidity(start_datetime, end_datetime):
+    pass    
+
+def get_data_acceleration(start_datetime, end_datetime):
+    pass
 # Streamlit UI
 def main():
     st.title("3D-Drucker Überwachung")
@@ -53,12 +58,16 @@ def main():
     if add_selectbox == "Temperatur":
         if submitted_button_temperatur:
             # Werte von Datenbank für ausgewählten Zeitraum
-            data = get_data(start_datetime, end_datetime)
+            data = get_data_temperature(start_datetime, end_datetime)
 
             # Erstelle panda dataframe
             df = pd.DataFrame(data, columns=['timestamp', 'temperature'])
             st.dataframe(df)
             print(df)
+
+            # Aktueller Wert live anzeigen
+            #latest_value = df.iloc[-1]['temperature'] if not df.empty else None
+            #st.text(f"Aktueller Wert: {latest_value}")
 
             # Plot der Daten
             st.area_chart(df.set_index('timestamp').rename(columns={'temperature': 'Temperatur'}))
