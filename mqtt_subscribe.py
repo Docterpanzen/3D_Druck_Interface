@@ -7,18 +7,17 @@ def on_connect(client, userdata, flags, rc):
     global connected
     if rc == 0:
         print("Client is connected!")
-        client.subscribe("topic/*")
+        client.subscribe("topic/#")
         connected = True
     else:
         print("Client is not connected!")
 
 def on_message(client, userdata, msg):
     print("Message received: " + str(msg.payload.decode("utf-8")))
+    print("Message arrived with topic: " + str(msg.topic))
 
 #---------------------
-
-connected = False
-
+    
 #---------- settings ----------
 client = paho.Client("MQTT")
 broker_address = "d8b3f3da52c749dc9ca162ec9439e398.s2.eu.hivemq.cloud"
@@ -28,6 +27,8 @@ password = "Start.123"
 client.tls_set(tls_version=mqtt.client.ssl.PROTOCOL_TLS)
 client.username_pw_set(username=user, password=password)
 #------------------------------
+
+connected = False
 
 client.on_connect = on_connect
 client.on_message = on_message
