@@ -2,7 +2,7 @@ import paho.mqtt.client as paho
 import time
 import sqlite3
 
-# SQLite Database
+# SQLite Database connection
 conn = sqlite3.connect('Data_3D_printer.db')
 cur = conn.cursor()
 
@@ -39,7 +39,8 @@ def save_temperature_to_database(temperature):
     try:
         conn = sqlite3.connect('Data_3D_printer.db')
         cur = conn.cursor()
-        cur.execute("INSERT INTO temperature_data (temperature) VALUES (?)", (temperature,))
+        timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
+        cur.execute("INSERT INTO temperature_data (timestamp, temperature) VALUES (?, ?)", (timestamp, temperature))
         conn.commit()
         print("Temperature data successfully saved to database.")
     except Exception as e:
@@ -75,7 +76,7 @@ def save_humidity_to_database(humidity):
         conn.close()
 
 
-# ... MQTT-Einstellungen ...
+# ---- MQTT-Einstellungen ----
 connected = False
 client = paho.Client("MQTT")
 broker_address = "d8b3f3da52c749dc9ca162ec9439e398.s2.eu.hivemq.cloud"
