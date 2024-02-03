@@ -1,6 +1,8 @@
 import streamlit as st
 import sqlite3
 import pandas as pd
+#from io import StringIO
+import io
 
 
 
@@ -14,7 +16,7 @@ def close_database_connection(conn):
     conn.close()
 
 
-# Funktion zum Daten holen aus der Datenbank
+# Funktion zum holen der Daten aus der Datenbank
 def get_data_temperature(start_datetime, end_datetime):
     conn, cur = connect_to_database()
     start_datetime_str = start_datetime.strftime('%Y-%m-%d %H:%M:%S')
@@ -49,104 +51,85 @@ def get_data_acceleration(start_datetime, end_datetime):
     return rows
 
 
+#----- Funktion um Gewicht aus G-Code zu bekommen
+def extract_filament_used(file_content):
+    lines = file_content.decode('utf-8').splitlines()
+    
+    for line in lines:
+        if '; filament used [g] =' in line:
+            return float(line.split('=')[1].strip())
+    
+    st.warning("Filamentgewicht nicht gefunden. Überprüfe das Dateiformat.")
+
 
 
 def main():
     st.title("3D-Drucker Überwachung")
 
-    with st.sidebar:
-        add_selectbox = st.selectbox("Optionen", ("Temperatur", "Beschleunigung", "Feuchtigkeit"))
+    tab1, tab2 = st.tabs(["Druckerdaten", "Druck Informationen"])
 
-        if add_selectbox == "Temperatur":
-            with st.form("My form"):
-                st.write("Wähle Daten aus: ")
-                # Zeitbereich für Werte
-                start_date = st.date_input("Start Date", pd.to_datetime('today') - pd.DateOffset(days=7))
-                start_time = st.time_input("Start Time", pd.Timestamp('00:00:00').time())
-                start_datetime = pd.to_datetime(str(start_date) + ' ' + str(start_time))
+    with tab1:
 
-                end_date = st.date_input("End Date", pd.to_datetime('today'))
-                end_time = st.time_input("End Time", pd.Timestamp('23:59:59').time())
-                end_datetime = pd.to_datetime(str(end_date) + ' ' + str(end_time))
-                submitted_button_temperatur = st.form_submit_button("Ausführen!")
-                if submitted_button_temperatur:
+        with st.sidebar:
+            with st.form("Form Zeitauswahl"):
+                st.header("Wähle Daten aus: ")
+                date = st.date_input("Tag", pd.to_datetime('today') - pd.DateOffset(days=7))        # Tag für Zeitbereich
+                start_time = st.time_input("Start Time", pd.Timestamp('00:00:00').time())           # Startzeit (Uhrzeit)
+                start_datetime = pd.to_datetime(str(date) + ' ' + str(start_time))                  # Erstelle Startdatum + Startuhrzeit
+                end_time = st.time_input("End Time", pd.Timestamp('23:59:59').time())               # Endzeit (Uhrzeit)
+                end_datetime = pd.to_datetime(str(date) + ' ' + str(end_time))                      # Erstelle Enddatum + Enduhrzeit
+                submitted_button = st.form_submit_button("Ausführen!")
+                if submitted_button:
                     st.success("Daten werden geladen")
 
-        if add_selectbox == "Beschleunigung":
-            with st.form("My form"):
-                st.write("Wähle Daten aus: ")
-                # Zeitbereich für Werte
-                start_date = st.date_input("Start Date", pd.to_datetime('today') - pd.DateOffset(days=7))
-                start_time = st.time_input("Start Time", pd.Timestamp('00:00:00').time())
-                start_datetime = pd.to_datetime(str(start_date) + ' ' + str(start_time))
-
-                end_date = st.date_input("End Date", pd.to_datetime('today'))
-                end_time = st.time_input("End Time", pd.Timestamp('23:59:59').time())
-                end_datetime = pd.to_datetime(str(end_date) + ' ' + str(end_time))
-                submitted_button_acceleration = st.form_submit_button("Ausführen!")
-                if submitted_button_acceleration:
-                    st.success("Daten werden geladen")       
                 
-        if add_selectbox == "Feuchtigkeit":
-            with st.form("My form"):
-                st.write("Wähle Daten aus: ")
-                # Zeitbereich für Werte
-                start_date = st.date_input("Start Date", pd.to_datetime('today') - pd.DateOffset(days=7))
-                start_time = st.time_input("Start Time", pd.Timestamp('00:00:00').time())
-                start_datetime = pd.to_datetime(str(start_date) + ' ' + str(start_time))
 
-                end_date = st.date_input("End Date", pd.to_datetime('today'))
-                end_time = st.time_input("End Time", pd.Timestamp('23:59:59').time())
-                end_datetime = pd.to_datetime(str(end_date) + ' ' + str(end_time))
-                submitted_button_humidity = st.form_submit_button("Ausführen!")
-                if submitted_button_humidity:
-                    st.success("Daten werden geladen")  
 
-    if add_selectbox == "Temperatur":
-        if submitted_button_temperatur:
-            # Werte von Datenbank für ausgewählten Zeitraum
-            data = get_data_temperature(start_datetime, end_datetime)
+        if submitted_button:
 
-            # Erstelle panda dataframe
-            df = pd.DataFrame(data, columns=['timestamp', 'temperature'])
-            st.dataframe(df)
-            print(df)
+            st.header("")
 
-            # Aktueller Wert live anzeigen
-            #latest_value = df.iloc[-1]['temperature'] if not df.empty else None
-            #st.text(f"Aktueller Wert: {latest_value}")
+            st.header("Temperatur")
+            data = get_data_temperature(start_datetime, end_datetime)                                   # Hole Werte aus Datenbank für Zeitbereich
+            st.write("Datum: ",date)
+            df = pd.DataFrame(data, columns=['timestamp', 'temperature'])                               # Erstelle Panda Dataframe
+            st.area_chart(df.set_index('timestamp').rename(columns={'temperature': 'Temperatur'}), width=12)      # Plot der daten
 
-            # Plot der Daten
-            st.area_chart(df.set_index('timestamp').rename(columns={'temperature': 'Temperatur'}))
+            st.divider()
 
-    elif add_selectbox == "Beschleunigung":
-        if submitted_button_acceleration:
+            st.header("Feuchtigkeit")
+            data = get_data_humidity(start_datetime, end_datetime)
+            st.write("Datum: ",date)
+            df2 = pd.DataFrame(data, columns=['timestamp', 'humidity'])
+            st.line_chart(df2.set_index('timestamp').rename(columns={'humidity': 'Feuchtigkeit'}))
+
+            st.divider()
+
+            st.header("Beschleunigung")
             data = get_data_acceleration(start_datetime, end_datetime)
-
-            # Erstelle panda dataframe
+            st.write("Datum: ",date)
             df1 = pd.DataFrame(data, columns=['timestamp', 'acceleration_x', 'acceleration_y', 'acceleration_z'])
-            st.dataframe(df1)
-            print(df1)
-
-            # Plot der Daten
             st.line_chart(df1.set_index('timestamp').rename(columns={   'acceleration_x': 'Beschleunigung X',
                                                                         'acceleration_y': 'Beschleunigung Y',
                                                                         'acceleration_z': 'Beschleunigung Z'}))
+
+    with tab2:
+    
+        st.title("Informationen zu dem Druck!")
+        
+
+        uploaded_file = st.file_uploader("G-Code Datei auswählen", type=["gcode"])
+
+        if uploaded_file is not None:
+            st.success("Datei erfolgreich hochgeladen!")
             
 
-    elif add_selectbox == "Feuchtigkeit":
-        if submitted_button_humidity:
-            data = get_data_humidity(start_datetime, end_datetime)
-
-            # Erstelle panda dataframe
-            df2 = pd.DataFrame(data, columns=['timestamp', 'humidity'])
-            st.dataframe(df2)
-            print(df2)
-
-            # Plot der Daten
-            st.line_chart(df2.set_index('timestamp').rename(columns={'humidity': 'Feuchtigkeit'}))
-
-
+            # Button zum Ausführen der Funktion
+            if st.button("Gewicht aus G-Code extrahieren"):
+                file_content = uploaded_file.getvalue()
+                filament_weight = extract_filament_used(file_content)
+                st.write(f"Gewicht des Filaments: {filament_weight} g")
+                st.balloons()
 
 
 
