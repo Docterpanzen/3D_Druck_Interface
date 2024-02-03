@@ -1,7 +1,8 @@
 import streamlit as st
 import sqlite3
 import pandas as pd
-from io import StringIO
+#from io import StringIO
+import io
 
 
 
@@ -49,6 +50,16 @@ def get_data_acceleration(start_datetime, end_datetime):
     close_database_connection(conn)
     return rows
 
+
+#----- Funktion um Gewicht aus G-Code zu bekommen
+def extract_filament_used(file_content):
+    lines = file_content.decode('utf-8').splitlines()
+    
+    for line in lines:
+        if '; filament used [g] =' in line:
+            return float(line.split('=')[1].strip())
+    
+    st.warning("Filamentgewicht nicht gefunden. Überprüfe das Dateiformat.")
 
 
 
@@ -103,15 +114,22 @@ def main():
                                                                         'acceleration_z': 'Beschleunigung Z'}))
 
     with tab2:
-        st.balloons()
+    
         st.title("Informationen zu dem Druck!")
-        file = st.file_uploader("Suche File aus")
+        
 
-        if file is not None:
-            stringio = StringIO(file.getvalue().decode("utf-8"))
+        uploaded_file = st.file_uploader("G-Code Datei auswählen", type=["gcode"])
 
-            file_data = stringio.read()
-            st.write(file_data)
+        if uploaded_file is not None:
+            st.success("Datei erfolgreich hochgeladen!")
+            
+
+            # Button zum Ausführen der Funktion
+            if st.button("Gewicht aus G-Code extrahieren"):
+                file_content = uploaded_file.getvalue()
+                filament_weight = extract_filament_used(file_content)
+                st.write(f"Gewicht des Filaments: {filament_weight} g")
+                st.balloons()
 
 
 
