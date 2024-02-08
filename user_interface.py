@@ -52,7 +52,6 @@ def get_data_acceleration(start_datetime, end_datetime):
 
 def get_data_camera():
     conn, cur = connect_to_database()
-    
     query = "SELECT timestamp, camera_byte_data FROM camera_data ORDER BY timestamp DESC LIMIT 1"
     cur.execute(query)
     row = cur.fetchone()
@@ -69,7 +68,6 @@ def extract_filament_used(file_content):
             return float(line.split('=')[1].strip())
     
     st.warning("Filamentgewicht nicht gefunden. Überprüfe das Dateiformat.")
-
 
 
 def main():
@@ -144,7 +142,7 @@ def main():
         row = get_data_camera()
         if row is not None:
             timestamp, camera_byte_data = row
-            image = Image.open(io.BytesIO(camera_byte_data))
+            image = camera_byte_data
             st.image(image, caption='Neuestes Bild', use_column_width=True)
         else:
             st.write("Es sind keine Kameradaten verfügbar.")

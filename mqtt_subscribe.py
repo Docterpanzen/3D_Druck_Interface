@@ -1,7 +1,6 @@
 import paho.mqtt.client as paho
 import time
 import sqlite3
-import io
 
 # SQLite Database connection
 conn = sqlite3.connect('Data_3D_printer.db')
@@ -15,7 +14,7 @@ def on_connect(client, userdata, flags, rc):
         client.subscribe("topic/temperature")
         client.subscribe("topic/acceleration")
         client.subscribe("topic/humidity")
-        client.subscribe("topic/camera")
+        client.subscribe("image_topic")
         connected = True
     else:
         print("Client is not connected!")
@@ -34,10 +33,9 @@ def on_message(client, userdata, msg):
             humidity_data = float(msg.payload.decode("utf-8"))
             print(f"Humidity Message received: {humidity_data}")
             save_humidity_to_database(humidity_data)
-        elif msg.topic == "topic/camera":
+        elif msg.topic == "image_topic":
             raw_camera_data = msg.payload
-            byte_camera_data = io.BytesIO(raw_camera_data)
-            save_camera_to_database(byte_camera_data)
+            save_camera_to_database(raw_camera_data)
     except ValueError:
         print("Failed to convert the message to a numeric format.")
 
@@ -46,14 +44,13 @@ def save_camera_to_database(camera_data):
         conn = sqlite3.connect('Data_3D_printer.db')
         cur = conn.cursor()
         timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
-        cur.execute("INSERT INTO camera_data (timestamp, camera) VALUES (?, ?)", (timestamp, camera_data))
+        cur.execute("INSERT INTO camera_data (timestamp, camera_byte_data) VALUES (?, ?)", (timestamp, camera_data))
         conn.commit()
         print("Camera picture data successfully saved to database.")
     except Exception as e:
         print(f"Error saving camera data to database: {e}")
     finally:
         conn.close()
-
 
 def save_temperature_to_database(temperature):
     try:
