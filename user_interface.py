@@ -1,7 +1,7 @@
 import streamlit as st
 import sqlite3
 import pandas as pd
-#from io import StringIO
+from PIL import Image
 import io
 
 
@@ -49,6 +49,15 @@ def get_data_acceleration(start_datetime, end_datetime):
     rows = cur.fetchall()
     close_database_connection(conn)
     return rows
+
+def get_data_camera():
+    conn, cur = connect_to_database()
+    
+    query = "SELECT timestamp, camera_byte_data FROM camera_data ORDER BY timestamp DESC LIMIT 1"
+    cur.execute(query)
+    row = cur.fetchone()
+    close_database_connection(conn)
+    return row
 
 
 #----- Funktion um Gewicht aus G-Code zu bekommen
@@ -131,6 +140,14 @@ def main():
                 st.write(f"Gewicht des Filaments: {filament_weight} g")
                 st.balloons()
 
+        # Anzeigen des neuesten Bildes
+        row = get_data_camera()
+        if row is not None:
+            timestamp, camera_byte_data = row
+            image = Image.open(io.BytesIO(camera_byte_data))
+            st.image(image, caption='Neuestes Bild', use_column_width=True)
+        else:
+            st.write("Es sind keine Kameradaten verfügbar.")
 
 
 if __name__ == "__main__":
