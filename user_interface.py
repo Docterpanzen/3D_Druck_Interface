@@ -123,9 +123,23 @@ def main():
     with tab2:
     
         st.title("Informationen zu dem Druck!")
-        
 
-        uploaded_file = st.file_uploader("G-Code Datei auswählen", type=["gcode"])
+        # Anzeigen des neuesten Bildes
+        row = get_data_camera()
+        if row is not None:
+            timestamp, camera_byte_data = row
+            image = camera_byte_data
+            st.image(image, caption='Aktueller Druckerstatus', use_column_width=True)
+        else:
+            st.write("Es sind keine Kameradaten verfügbar.")
+
+
+        st.divider()
+
+        st.header("Filamentgewicht")
+
+
+        uploaded_file = st.file_uploader("Lade hier deinen G-Code hoch", type=["gcode"])
 
         if uploaded_file is not None:
             st.success("Datei erfolgreich hochgeladen!")
@@ -137,15 +151,6 @@ def main():
                 filament_weight = extract_filament_used(file_content)
                 st.write(f"Gewicht des Filaments: {filament_weight} g")
                 st.balloons()
-
-        # Anzeigen des neuesten Bildes
-        row = get_data_camera()
-        if row is not None:
-            timestamp, camera_byte_data = row
-            image = camera_byte_data
-            st.image(image, caption='Neuestes Bild', use_column_width=True)
-        else:
-            st.write("Es sind keine Kameradaten verfügbar.")
 
 
 if __name__ == "__main__":
