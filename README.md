@@ -1,6 +1,13 @@
-# Enclosure Monitoring System
+# Gehäuseüberwachungssystem
 
-Dieses Projekt enthält mehrere Module zur Überwachung verschiedener Parameter in einem Gehäuse. Es verwendet verschiedene Sensoren, um Daten zu sammeln, und sendet diese Daten an einen MQTT-Broker.
+Dieses Projekt ermöglicht die Überwachung verschiedener Parameter in einem Gehäuse durch mehrere Module, die Daten von verschiedenen Sensoren sammeln und sie an einen MQTT-Broker senden.
+
+## Inhaltsverzeichnis
+
+- [Module](#module)
+- [Hauptprogramm](#hauptprogramm)
+- [Installation](#installation)
+- [Verwendung](#verwendung)
 
 ## Module
 
@@ -39,4 +46,4 @@ Um dieses Projekt zu verwenden, klonen Sie das Repository und installieren Sie d
 Führen Sie das Hauptprogramm aus, um Daten von allen Sensoren zu sammeln und an den MQTT-Broker zu senden:
 
 ```bash
-python3 data_to_mqtt.py 
+python3 data_to_mqtt.py
