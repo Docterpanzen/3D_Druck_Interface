@@ -1,6 +1,6 @@
-# Gehäuseüberwachungssystem
+# 3D-Drucker Überwachung
 
-Dieses Projekt ermöglicht die Überwachung verschiedener Parameter in einem Gehäuse durch mehrere Module, die Daten von verschiedenen Sensoren sammeln und sie an einen MQTT-Broker senden.
+Dieses Projekt ermöglicht die Überwachung diverser Parameter in einem 3D-Drucker oder anderen Gehäusen mittels verschiedener Module. Diese Module erfassen Daten von unterschiedlichen Sensoren und übertragen sie an einen MQTT-Broker.
 
 ## Inhaltsverzeichnis
 
@@ -13,23 +13,23 @@ Dieses Projekt ermöglicht die Überwachung verschiedener Parameter in einem Geh
 
 Das Projekt besteht aus den folgenden Modulen:
 
-- **adxl345-module.py**
+- **adxl345_module.py**
 
   Dieses Modul liest Beschleunigungsdaten von einem ADXL345-Sensor und sendet sie an den MQTT-Broker. Die Daten werden unter dem Topic "topic/acceleration" gesendet.
 
-- **camera-module.py**
+- **camera_module.py**
 
   Dieses Modul nimmt Bilder mit einer Auflösung von 1920x1080 auf und sendet sie an den MQTT-Broker. Die Bilder werden unter dem Topic "image_topic" gesendet.
 
-- **dht11-module.py**
+- **dht11_module.py**
 
   Dieses Modul liest Temperatur- und Feuchtigkeitsdaten von einem DHT11-Sensor und sendet sie an den MQTT-Broker. Die Temperaturdaten werden unter dem Topic "topic/temperature" und die Feuchtigkeitsdaten unter dem Topic "topic/humidity" gesendet.
 
-- **hx711-module.py**
+- **hx711_module.py**
 
-  Dieses Modul liest Gewichtsdaten von einem HX711-Sensor und sendet sie an den MQTT-Broker. Die Daten werden unter dem Topic "your_topic" gesendet.
+  Dieses Modul liest Gewichtsdaten von einem HX711-Sensor und sendet sie an den MQTT-Broker. Die Daten werden unter dem Topic "topic/weight" gesendet.
 
-- **mqtt-connector.py**
+- **mqtt_connector.py**
 
   Dieses Modul stellt eine Verbindung zu einem MQTT-Broker her und stellt Funktionen zur Verfügung, um Nachrichten an den Broker zu senden.
 
