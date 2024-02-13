@@ -85,7 +85,7 @@ def main():
                 start_datetime = pd.to_datetime(str(date) + ' ' + str(start_time))                  # Erstelle Startdatum + Startuhrzeit
                 end_time = st.time_input("End Time", pd.Timestamp('23:59:59').time())               # Endzeit (Uhrzeit)
                 end_datetime = pd.to_datetime(str(date) + ' ' + str(end_time))                      # Erstelle Enddatum + Enduhrzeit
-                submitted_button = st.form_submit_button("Ausführen!")
+                submitted_button = st.form_submit_button("Ausführen")
                 if submitted_button:
                     st.success("Daten werden geladen")
 
@@ -122,7 +122,7 @@ def main():
 
     with tab2:
     
-        st.title("Informationen zu dem Druck!")
+        st.title("Informationen zu dem Druck")
 
         # Anzeigen des neuesten Bildes
         row = get_data_camera()
@@ -130,8 +130,11 @@ def main():
             timestamp, camera_byte_data = row
             image = camera_byte_data
             st.image(image, caption='Aktueller Druckerstatus', use_column_width=True)
+            if st.button('Aktualisieren'):
+                st.rerun()
         else:
             st.write("Es sind keine Kameradaten verfügbar.")
+
 
 
         st.divider()
