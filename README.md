@@ -59,7 +59,7 @@ Die Streamlit-App bietet zwei Hauptfunktionen:
 - **Druckerdaten:** Anzeigen von aktuellen Daten wie Temperatur, Feuchtigkeit und Beschleunigung im Druckraum.
   - Wählen Sie den Reiter "Druckerdaten", um die aktuellen Daten des Druckers anzuzeigen.
   - Wählen Sie das gewünschte Datum und den Zeitbereich aus, für den Sie die Daten anzeigen möchten.
-  - Klicken Sie auf "Ausführen & Aktualisieren", um die Daten anzuzeigen oder zu aktualisieren.
+  - Klicken Sie auf "Ausführen", um die Daten anzuzeigen oder zu aktualisieren.
 
 - **Druckinformationen:** Anzeigen zusätzlicher Informationen zum Druckvorgang.
   - Wechseln Sie zum Reiter "Druckinformationen", um zusätzliche Informationen zum Druckvorgang zu erhalten.
