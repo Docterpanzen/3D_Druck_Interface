@@ -1,7 +1,7 @@
 import streamlit as st
 import sqlite3
 import pandas as pd
-#from io import StringIO
+from PIL import Image
 import io
 
 
@@ -50,6 +50,14 @@ def get_data_acceleration(start_datetime, end_datetime):
     close_database_connection(conn)
     return rows
 
+def get_data_camera():
+    conn, cur = connect_to_database()
+    query = "SELECT timestamp, camera_byte_data FROM camera_data ORDER BY timestamp DESC LIMIT 1"
+    cur.execute(query)
+    row = cur.fetchone()
+    close_database_connection(conn)
+    return row
+
 
 #----- Funktion um Gewicht aus G-Code zu bekommen
 def extract_filament_used(file_content):
@@ -60,7 +68,6 @@ def extract_filament_used(file_content):
             return float(line.split('=')[1].strip())
     
     st.warning("Filamentgewicht nicht gefunden. Überprüfe das Dateiformat.")
-
 
 
 def main():
@@ -78,7 +85,7 @@ def main():
                 start_datetime = pd.to_datetime(str(date) + ' ' + str(start_time))                  # Erstelle Startdatum + Startuhrzeit
                 end_time = st.time_input("End Time", pd.Timestamp('23:59:59').time())               # Endzeit (Uhrzeit)
                 end_datetime = pd.to_datetime(str(date) + ' ' + str(end_time))                      # Erstelle Enddatum + Enduhrzeit
-                submitted_button = st.form_submit_button("Ausführen!")
+                submitted_button = st.form_submit_button("Ausführen")
                 if submitted_button:
                     st.success("Daten werden geladen")
 
@@ -115,10 +122,27 @@ def main():
 
     with tab2:
     
-        st.title("Informationen zu dem Druck!")
-        
+        st.title("Informationen zu dem Druck")
 
-        uploaded_file = st.file_uploader("G-Code Datei auswählen", type=["gcode"])
+        # Anzeigen des neuesten Bildes
+        row = get_data_camera()
+        if row is not None:
+            timestamp, camera_byte_data = row
+            image = camera_byte_data
+            st.image(image, caption='Aktueller Druckerstatus', use_column_width=True)
+            if st.button('Aktualisieren'):
+                st.rerun()
+        else:
+            st.write("Es sind keine Kameradaten verfügbar.")
+
+
+
+        st.divider()
+
+        st.header("Filamentgewicht")
+
+
+        uploaded_file = st.file_uploader("Lade hier deinen G-Code hoch", type=["gcode"])
 
         if uploaded_file is not None:
             st.success("Datei erfolgreich hochgeladen!")
@@ -130,7 +154,6 @@ def main():
                 filament_weight = extract_filament_used(file_content)
                 st.write(f"Gewicht des Filaments: {filament_weight} g")
                 st.balloons()
-
 
 
 if __name__ == "__main__":
