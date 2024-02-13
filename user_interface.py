@@ -73,7 +73,7 @@ def extract_filament_used(file_content):
 def main():
     st.title("3D-Drucker Überwachung")
 
-    tab1, tab2 = st.tabs(["Druckerdaten", "Druck Informationen"])
+    tab1, tab2 = st.tabs(["Druckerdaten", "Druckinformationen"])
 
     with tab1:
 

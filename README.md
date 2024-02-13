@@ -9,7 +9,6 @@ Dieses Python-Programm ermöglicht es Ihnen, Daten von Sensoren aus einem 3D-Dru
 - [Verwendung](#verwendung)
 - [Anleitung](#anleitung)
 - [Hinweis](#hinweis)
-- [Lizenz](#lizenz)
 
 ## Voraussetzungen
 
@@ -22,13 +21,13 @@ Dieses Python-Programm ermöglicht es Ihnen, Daten von Sensoren aus einem 3D-Dru
 1. Klonen Sie dieses Repository:
 
     ```bash
-    git clone https://github.com/your_username/3d-printer-monitoring.git
+    git clone https://github.com/Docterpanzen/3D_Druck_Interface
     ```
 
 2. Wechseln Sie in das Verzeichnis:
 
     ```bash
-    cd 3d-printer-monitoring
+    cd 3D_Druck_Interface
     ```
 
 3. Installieren Sie die erforderlichen Pakete:
@@ -48,7 +47,7 @@ Dieses Python-Programm ermöglicht es Ihnen, Daten von Sensoren aus einem 3D-Dru
 2. Starten Sie die Streamlit-App:
 
     ```bash
-    streamlit run app.py
+    streamlit run user_interface.py
     ```
 
 3. Öffnen Sie Ihren Webbrowser und gehen Sie zu [http://localhost:8501](http://localhost:8501), um die Streamlit-App anzuzeigen.
@@ -67,6 +66,3 @@ Bitte beachten Sie die detaillierte Bedienungsanleitung in der [Anleitung](#anle
 
 Stellen Sie sicher, dass der MQTT-Abonnent im Hintergrund läuft, um kontinuierlich Daten zu speichern.
 
-## Lizenz
-
-Dieses Projekt ist unter der [MIT Lizenz](LICENSE) lizenziert.
