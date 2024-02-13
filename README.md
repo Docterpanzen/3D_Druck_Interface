@@ -57,12 +57,17 @@ Dieses Python-Programm ermöglicht es Ihnen, Daten von Sensoren aus einem 3D-Dru
 Die Streamlit-App bietet zwei Hauptfunktionen:
 
 - **Druckerdaten:** Anzeigen von aktuellen Daten wie Temperatur, Feuchtigkeit und Beschleunigung im Druckraum.
-  
-- **Druckinformationen:** Anzeigen eines Live-Bilds aus dem Druckraum und Umrechnen des G-Codes in das benötigte Filamentgewicht.
+  - Wählen Sie den Reiter "Druckerdaten", um die aktuellen Daten des Druckers anzuzeigen.
+  - Wählen Sie das gewünschte Datum und den Zeitbereich aus, für den Sie die Daten anzeigen möchten.
+  - Klicken Sie auf "Ausführen & Aktualisieren", um die Daten anzuzeigen oder zu aktualisieren.
 
-Bitte beachten Sie die detaillierte Bedienungsanleitung in der [Anleitung](#anleitung)-Sektion.
+- **Druckinformationen:** Anzeigen zusätzlicher Informationen zum Druckvorgang.
+  - Wechseln Sie zum Reiter "Druckinformationen", um zusätzliche Informationen zum Druckvorgang zu erhalten.
+  - Ein Live-Bild aus dem Druckraum wird alle 10 Sekunden aktualisiert.
+  - Geben Sie Ihren G-Code in das entsprechende Feld ein, um ihn in das benötigte Filamentgewicht umzurechnen.
+  - Vergleichen Sie das berechnete Gewicht mit dem tatsächlichen Gewicht Ihres Filaments mithilfe einer Filamentwaage.
+  - Die App gibt Auskunft darüber, ob das Filament ausreicht oder ob Sie die Filamentspule erneuern sollten.
 
 ## Hinweis
 
 Stellen Sie sicher, dass der MQTT-Abonnent im Hintergrund läuft, um kontinuierlich Daten zu speichern.
-
