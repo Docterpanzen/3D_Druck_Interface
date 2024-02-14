@@ -9,6 +9,8 @@ Dieses Python-Programm ermöglicht es Ihnen, Daten von Sensoren aus einem 3D-Dru
 - [Verwendung](#verwendung)
 - [Anleitung](#anleitung)
 - [Hinweis](#hinweis)
+- [Unterstützung](#unterstützung)
+- [Mitwirkende](#mitwirkende)
 
 ## Voraussetzungen
 
@@ -70,4 +72,16 @@ Die Streamlit-App bietet zwei Hauptfunktionen:
 
 ## Hinweis
 
-Stellen Sie sicher, dass der MQTT-Abonnent im Hintergrund läuft, um kontinuierlich Daten zu speichern.
+- Gewährleisten Sie, dass der MQTT-Abonnent im Hintergrund läuft, um kontinuierlich Daten zu speichern.
+- Es wurden lediglich exemplarische Daten erfasst und in der Datenbank, die auch im Repository liegt, abgelegt. Aufgrund von Datenbeschränkungen konnten wir diese nicht in großem Umfang generieren und haben uns daher auf einen kleinen Datenausschnitt beschränkt, um die Datenbank nicht mit den von uns generierten Datensätzen zu füllen. Um einen Eindruck von unserer Streamlit-Oberfläche zu erhalten, können Sie den 14.02.2024 oder den 19.01.2024 als Datum auswählen, da zu diesen Zeitpunkten Daten aufgenommen wurden.
+- Die Anleitung für den Raspberry Pi und die zugehörige Hardware befinden sich im Zweig "RaspberryPi" und können dort eingesehen werden.
+
+## Unterstützung
+
+Bei Fragen oder Problemen können Sie uns unter E-Mail-Adresse kontaktieren.
+
+## Mitwirkende
+
+Oskar Klöpfer (@Docterpanzen)
+Lenard Wild (@wildle)
+Tim Hornikel (@timhornikel)

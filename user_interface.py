@@ -174,7 +174,7 @@ def main():
 
         st.divider()
 
-        st.header("Filamentgewicht")
+        st.header("Druckvorschau")
         uploaded_file = st.file_uploader("Lade hier deinen G-Code hoch", type=["gcode"])
         filament_weight = 0
 
@@ -190,11 +190,12 @@ def main():
                 if filament_weight is not None and average_weight is not None:
                     if filament_weight < average_weight:
                         st.success("Es ist genug Filament vorhanden.")
+                        st.balloons()
                     else:
-                        st.error("Es ist nicht genug Filament vorhanden.")
-                st.balloons()
+                        st.error("Es ist nicht genug Filament vorhanden. Bitte benutz eine neue Filamentrolle.")
+                
         else:
-            st.warning("Bitte lade eine Datei hoch.")
+            st.error("Bitte lade eine Datei hoch.")
 
 if __name__ == "__main__":
     main()
