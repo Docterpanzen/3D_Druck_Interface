@@ -78,10 +78,10 @@ Die Streamlit-App bietet zwei Hauptfunktionen:
 
 ## Unterstützung
 
-Bei Fragen oder Problemen können Sie uns unter E-Mail-Adresse kontaktieren.
+Bei Fragen oder Problemen können Sie uns unter den entsprechenden GitHub-Konten erreichen.
 
 ## Mitwirkende
 
-Oskar Klöpfer (@Docterpanzen)
-Lenard Wild (@wildle)
-Tim Hornikel (@timhornikel)
+- Oskar Klöpfer (@Docterpanzen)
+- Lenard Wild (@wildle)
+- Tim Hornikel (@timhornikel)
