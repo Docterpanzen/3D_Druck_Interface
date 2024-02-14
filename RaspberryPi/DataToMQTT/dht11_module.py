@@ -8,11 +8,14 @@ import mqtt_connector
 # (GPIO 23) des Raspberry Pi verbunden ist:
 dhtDevice = adafruit_dht.DHT11(board.D23)
 
-def send_mqtt(client, temperature_c, humidity):
-    # Formatieren Sie die Nachricht
-    msg = f"Temp: {temperature_c} C Luftfeuchtigkeit: {humidity}%"
-    # Senden Sie die Nachricht an den MQTT-Broker
-    client.publish("Temperature and Humidity", msg)
+def send_mqtt(client, temperature, humidity):
+    # Formatieren Sie die Nachrichten
+    temp_msg = f"{temperature}"
+    humid_msg = f"{humidity}"
+    
+    # Senden Sie die Nachrichten an den MQTT-Broker
+    client.publish("topic/temperature", temp_msg)
+    client.publish("topic/humidity", humid_msg)
 
 def run_dht11_module():
     print("Running DHT11 module...")  # Diese Zeile hinzufügen
