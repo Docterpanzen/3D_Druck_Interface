@@ -58,17 +58,37 @@ def get_data_camera():
     close_database_connection(conn)
     return row
 
+def get_average_weight_data():
+    conn, cur = connect_to_database()
+    query = "SELECT weight FROM weight_data ORDER BY timestamp DESC LIMIT 3"
+    cur.execute(query)
+    rows = cur.fetchall()
+    close_database_connection(conn)
+    if rows:
+        total_weight = sum(row[0] for row in rows)
+        average_weight = total_weight / len(rows)
+        return average_weight
+    else:
+        return None
+
 
 #----- Funktion um Gewicht aus G-Code zu bekommen
 def extract_filament_used(file_content):
-    lines = file_content.decode('utf-8').splitlines()
-    
+    try:
+        lines = file_content.decode('utf-8').splitlines()
+    except UnicodeDecodeError:
+        st.error("Fehler beim Dekodieren der Dateiinhalte. Überprüfe das Dateiformat.")
+        return None
+
     for line in lines:
         if '; filament used [g] =' in line:
-            return float(line.split('=')[1].strip())
-    
+            try:
+                return float(line.split('=')[1].strip())
+            except (IndexError, ValueError):
+                st.error("Fehler beim Extrahieren des Filamentgewichts. Überprüfe das Dateiformat.")
+                return None
     st.warning("Filamentgewicht nicht gefunden. Überprüfe das Dateiformat.")
-
+    return None
 
 def main():
     st.title("3D-Drucker Überwachung")
@@ -139,22 +159,42 @@ def main():
 
         st.divider()
 
+        max_weight = 1232  # Maximales Gewicht der Filamentrolle
+        
+        st.header("Filamentrolle")
+        average_weight = get_average_weight_data()
+        average_weight = round(average_weight, 2) if average_weight is not None else None
+        if average_weight is not None:
+            st.text(f" Vorhandene Menge an Filament: {average_weight} g")
+            progress = st.progress(0)
+            progress_value = average_weight / max_weight
+            progress.progress(progress_value)
+        else:
+            st.warning("Es sind keine Gewichtsdaten verfügbar.")
+
+        st.divider()
+
         st.header("Filamentgewicht")
-
-
         uploaded_file = st.file_uploader("Lade hier deinen G-Code hoch", type=["gcode"])
+        filament_weight = 0
 
         if uploaded_file is not None:
-            st.success("Datei erfolgreich hochgeladen!")
-            
+            st.info("Datei erfolgreich hochgeladen!")
 
             # Button zum Ausführen der Funktion
             if st.button("Gewicht aus G-Code extrahieren"):
                 file_content = uploaded_file.getvalue()
                 filament_weight = extract_filament_used(file_content)
-                st.write(f"Gewicht des Filaments: {filament_weight} g")
+                filament_weight = round(filament_weight, 2) if filament_weight is not None else None
+                st.write(f"Vorraussichtlicher Filamentverbrauch: {filament_weight} g")
+                if filament_weight is not None and average_weight is not None:
+                    if filament_weight < average_weight:
+                        st.success("Es ist genug Filament vorhanden.")
+                    else:
+                        st.error("Es ist nicht genug Filament vorhanden.")
                 st.balloons()
-
+        else:
+            st.warning("Bitte lade eine Datei hoch.")
 
 if __name__ == "__main__":
     main()

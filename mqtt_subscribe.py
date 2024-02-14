@@ -10,6 +10,7 @@ def on_connect(client, userdata, flags, rc):
         client.subscribe("topic/temperature")
         client.subscribe("topic/acceleration")
         client.subscribe("topic/humidity")
+        client.subscribe("topic/weight")
         client.subscribe("image_topic")
         connected = True
     else:
