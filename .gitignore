@@ -161,3 +161,4 @@ cython_debug/
 .3d_druck_interface
 database.py
 names.db
+Data_3D_printer.db
